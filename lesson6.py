@@ -142,6 +142,7 @@ while check:
 arrayRaw = []
 for i in range(arraySize[0]):
     arrayRaw.append([randint(1, 200) for _ in range(arraySize[1])])
+    
 print('\nИсходный массив:')
 printArray(arrayRaw)
 arrayMix = getMixArray(arrayRaw)
