@@ -1,3 +1,6 @@
+
+import consts
+
 class RepositoryBase:
     """Базовый класс по работе с хранилищем телефонных номеров"""
 
@@ -21,14 +24,14 @@ class RepositoryBase:
         """Поиск контактов по номеру телефона""" 
         pass
 
-    def addContact(firstName, lastName, surName, phones): 
+    def addContact(firstName, lastName, surName, contactPhones): 
         """Добавление нового контакта.
         
         Arguments:
         firstName -- Имя контакта.
         lastName -- Фамилия контакта.
         surName -- Отчество контакта.
-        phones -- Список телефонов. Каждый элемент состоит из массива, на первом месте заголовок номера, на втором - номер телефона.
+        contactPhones -- Список телефонов.
         """
         pass
 
@@ -55,3 +58,15 @@ class RepositoryBase:
         id -- Идентификатор контакта для удаления.
         """
         pass
+
+    # Печать контакта в красивом виде
+    def printContacts(contacts):
+        print('Найденные контакты:')
+        for contact in contacts:
+            text = f"[{contact[consts.KEY_ID]}] {contact[consts.KEY_FIRST_NAME]} {contact[consts.KEY_LAST_NAME]} {contact[consts.KEY_SURNAME]}: "
+            phones = contact[consts.KEY_PHONES]
+            for ind in range(len(phones)):
+                if ind > 0:
+                    text += ', '
+                text += f"{phones[ind][consts.KEY_TITLE]} {phones[ind][consts.KEY_NUMBER]}"
+            print(text)

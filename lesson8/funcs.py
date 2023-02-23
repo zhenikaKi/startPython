@@ -1,6 +1,7 @@
 
 import consts
-from repository.JsonRepository import Repository # Хранилище в json-файле
+#from repository.JsonRepository import Repository # Хранилище в json-файле
+from repository.SqliteRepository import Repository # Хранилище в БД
 
 __CMD_FIND_BY_FISRT_NAME = 1
 __CMD_FIND_BY_LAST_NAME = 2
@@ -71,8 +72,10 @@ def __addContact():
         if phone == '0' or title == '0':
             break
         phones.append([title, phone])
-    
-    Repository.addContact(firstName, lastName, surName, phones)
+
+    # формируем список номеров
+    contactPhones = list(map(lambda item: {consts.KEY_TITLE: item[0], consts.KEY_NUMBER: item[1]}, phones))    
+    Repository.addContact(firstName, lastName, surName, contactPhones)
 
 # Поиск контакта для дальнейшего редактирования
 def __findContactForEdit():

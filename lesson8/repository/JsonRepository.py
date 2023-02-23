@@ -36,18 +36,16 @@ class Repository(RepositoryBase):
 
         Repository.__findContacts(3, value)
     
-    def addContact(firstName, lastName, surName, phones): 
+    def addContact(firstName, lastName, surName, contactPhones): 
         """Добавление нового контакта.
         
         Arguments:
         firstName -- Имя контакта.
         lastName -- Фамилия контакта.
         surName -- Отчество контакта.
-        phones -- Список телефонов. Каждый элемент состоит из массива, на первом месте заголовок номера, на втором - номер телефона.
+        contactPhones -- Список телефонов.
         """
-
-        # формируем список номеров
-        contactPhones = list(map(lambda item: {consts.KEY_TITLE: item[0], consts.KEY_NUMBER: item[1]}, phones))
+        
         # формируем контакт
         contact = {
             consts.KEY_ID: Repository.__getNewID(),
@@ -108,17 +106,6 @@ class Repository(RepositoryBase):
                     return True
         return False
 
-    # Печать контакта в красивом виде
-    def __printContacts(contacts):
-        for contact in contacts:
-            text = f"[{contact[consts.KEY_ID]}] {contact[consts.KEY_FIRST_NAME]} {contact[consts.KEY_LAST_NAME]} {contact[consts.KEY_SURNAME]}: "
-            phones = contact[consts.KEY_PHONES]
-            for ind in range(len(phones)):
-                if ind > 0:
-                    text += ', '
-                text += f"{phones[ind][consts.KEY_TITLE]} {phones[ind][consts.KEY_NUMBER]}"
-            print(text)
-
     # Поиск контактов в телефонном справочнике
     def __findContacts(cmd, text):
         # Обходим всех контактов
@@ -140,9 +127,8 @@ class Repository(RepositoryBase):
             # нашли нужный контакт
             if (isExists):
                 result.append(contact)
-        
-        print('Найденные контакты:')
-        Repository.__printContacts(result)
+                
+        RepositoryBase.printContacts(result)
 
     # Получить новый идентификатор контакта
     def __getNewID():
