@@ -1,0 +1,1 @@
+[{"id": 1, "firstName": "Иван", "lastName": "Иванов", "surname": "Иванович", "phones": [{"title": "Основной", "number": "79021234567"}, {"title": "Домашний", "number": "73425657474"}]}, {"id": 2, "firstName": "Петр", "lastName": "Сидоров", "surname": "Алексеевич", "phones": [{"title": "Основной", "number": "79021112244"}, {"title": "Домашний", "number": "73425622222"}]}]
