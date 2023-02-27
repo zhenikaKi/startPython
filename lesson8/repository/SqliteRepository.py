@@ -12,20 +12,17 @@ class Repository(RepositoryBase):
         """Загрузка телефонного справочника"""
         Repository.__initDb()
 
-    def findByFirstNameAndPrint(value):
-        result = Repository.__getContactsFromDb(f"{consts.KEY_DB_FIRST_NAME} like '%{value}%'")
-        RepositoryBase.printContacts(result)
+    def findByFirstName(value):
+        return Repository.__getContactsFromDb(f"{consts.KEY_DB_FIRST_NAME} like '%{value}%'")
 
-    def findByLastNameAndPrint(value):
+    def findByLastName(value):
         """Поиск контактов по фамилии"""
-        result = Repository.__getContactsFromDb(f"{consts.KEY_DB_LAST_NAME} like '%{value}%'")
-        RepositoryBase.printContacts(result)
+        return Repository.__getContactsFromDb(f"{consts.KEY_DB_LAST_NAME} like '%{value}%'")
 
-    def findByNumberAndPrint(value):
+    def findByNumber(value):
         """Поиск контактов по номеру телефона""" 
-        result = Repository.__getContactsFromDb(f"{consts.KEY_NUMBER} like '%{value}%'")
-        RepositoryBase.printContacts(result)
-
+        return Repository.__getContactsFromDb(f"{consts.KEY_NUMBER} like '%{value}%'")
+        
     def addContact(firstName, lastName, surName, contactPhones): 
         """Добавление нового контакта.
         
@@ -52,6 +49,21 @@ class Repository(RepositoryBase):
             parameters = (id, phone[consts.KEY_TITLE], phone[consts.KEY_NUMBER])
             Repository.__db.execute(sql, parameters)
         Repository.__db.commit()
+
+    def getAllContacts():
+        """Получить список контактов"""
+        sql = f"select * from {consts.TABLE_CONTACTS} order by {consts.KEY_DB_FIRST_NAME}, {consts.KEY_DB_LAST_NAME}"
+        cursor = Repository.__db.execute(sql)
+        result = []
+        for row in cursor:
+            contact = {
+                consts.KEY_ID: row[0],
+                consts.KEY_FIRST_NAME: row[1],
+                consts.KEY_LAST_NAME: row[2],
+                consts.KEY_SURNAME: row[3]
+            }
+            result.append(contact)
+        return result
 
     def getContact(id):
         """Получить контакт со всеми телефонами по идентификатору

@@ -21,20 +21,20 @@ class Repository(RepositoryBase):
         with open(Repository.__fileName, 'w', encoding="utf-8") as f:
             f.write(json.dumps(Repository.__phones, ensure_ascii=False))
 
-    def findByFirstNameAndPrint(value):
+    def findByFirstName(value):
         """Поиск контактов по имени"""
 
-        Repository.__findContacts(1, value)
+        return Repository.__findContacts(1, value)
 
-    def findByLastNameAndPrint(value):
+    def findByLastName(value):
         """Поиск контактов по фамилии"""
 
-        Repository.__findContacts(2, value)
+        return Repository.__findContacts(2, value)
 
-    def findByNumberAndPrint(value):
+    def findByNumber(value):
         """Поиск контактов по номеру телефона""" 
 
-        Repository.__findContacts(3, value)
+        return Repository.__findContacts(3, value)
     
     def addContact(firstName, lastName, surName, contactPhones): 
         """Добавление нового контакта.
@@ -55,6 +55,16 @@ class Repository(RepositoryBase):
             consts.KEY_PHONES: contactPhones
         }
         Repository.__phones.append(contact)
+
+    def getAllContacts():
+        """Получить список контактов"""
+        result = list(map(lambda item: {
+            consts.KEY_ID: item[consts.KEY_ID],
+            consts.KEY_FIRST_NAME: item[consts.KEY_FIRST_NAME],
+            consts.KEY_LAST_NAME: item[consts.KEY_LAST_NAME],
+            consts.KEY_SURNAME: item[consts.KEY_SURNAME]
+        }, Repository.__phones))
+        return result
 
     def getContact(id):
         """Получить контакт со всеми телефонами по идентификатору
@@ -128,7 +138,7 @@ class Repository(RepositoryBase):
             if (isExists):
                 result.append(contact)
                 
-        RepositoryBase.printContacts(result)
+        return result
 
     # Получить новый идентификатор контакта
     def __getNewID():

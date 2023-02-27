@@ -12,15 +12,15 @@ class RepositoryBase:
         """Сохранение телефонного справочника"""
         pass
 
-    def findByFirstNameAndPrint(value):
+    def findByFirstName(value):
         """Поиск контактов по имени"""
         pass
 
-    def findByLastNameAndPrint(value):
+    def findByLastName(value):
         """Поиск контактов по фамилии"""
         pass
 
-    def findByNumberAndPrint(value):
+    def findByNumber(value):
         """Поиск контактов по номеру телефона""" 
         pass
 
@@ -33,6 +33,10 @@ class RepositoryBase:
         surName -- Отчество контакта.
         contactPhones -- Список телефонов.
         """
+        pass
+
+    def getAllContacts():
+        """Получить список контактов"""
         pass
 
     def getContact(id):
@@ -58,15 +62,3 @@ class RepositoryBase:
         id -- Идентификатор контакта для удаления.
         """
         pass
-
-    # Печать контакта в красивом виде
-    def printContacts(contacts):
-        print('Найденные контакты:')
-        for contact in contacts:
-            text = f"[{contact[consts.KEY_ID]}] {contact[consts.KEY_FIRST_NAME]} {contact[consts.KEY_LAST_NAME]} {contact[consts.KEY_SURNAME]}: "
-            phones = contact[consts.KEY_PHONES]
-            for ind in range(len(phones)):
-                if ind > 0:
-                    text += ', '
-                text += f"{phones[ind][consts.KEY_TITLE]} {phones[ind][consts.KEY_NUMBER]}"
-            print(text)

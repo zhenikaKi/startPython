@@ -41,6 +41,55 @@ def procCommand(cmd):
         print("Неизвестная команда")
     return True
 
+# Получить все контакты
+def getAllContacts():
+    return Repository.getAllContacts()
+    return True
+
+# Преобразовать контакты к списку ФИО контактов
+def contactsToContactsFIO(contacts):
+    result = list(map(lambda item: f'{item[consts.KEY_FIRST_NAME]} {item[consts.KEY_LAST_NAME]} {item[consts.KEY_SURNAME]}', contacts))
+    return result
+
+# Получить данные по контакту в виде списка строк, готовых для отображения
+def getContactDataAsString(contact):
+    contactData = Repository.getContact(contact[consts.KEY_ID])
+    result = []
+    result.append(f'Имя: {contactData[consts.KEY_FIRST_NAME]}')
+    result.append(f'Фамилия: {contactData[consts.KEY_LAST_NAME]}')
+    result.append(f'Отчество: {contactData[consts.KEY_SURNAME]}')
+    result.append('')
+
+    for contact in contactData[consts.KEY_PHONES]:
+        result.append(f'{contact[consts.KEY_TITLE]}: {contact[consts.KEY_NUMBER]}')
+    
+    return result
+
+# Удалить контакт
+def deleteContact(contact):
+    Repository.deleteContactOnId(contact[consts.KEY_ID])
+
+# Найти все контакты по фильтру
+def findAllContactsOnFilter(filterText):
+    contacts = []
+    contacts.extend(Repository.findByFirstName(filterText))
+    contacts.extend(Repository.findByLastName(filterText))
+    contacts.extend(Repository.findByNumber(filterText))
+    distinctContacts = []
+    for contact in contacts:
+        if (contact == None):
+            continue
+        distinctContactsId = list(map(lambda item: item[consts.KEY_ID], distinctContacts))
+        if contact[consts.KEY_ID] not in distinctContactsId:
+            distinctContacts.append(contact)
+    return distinctContacts
+
+# Добавление нового контакта
+def addContact(firstName, lastName, surName, phones):
+    # формируем список номеров
+    contactPhones = list(map(lambda item: {consts.KEY_TITLE: item[0], consts.KEY_NUMBER: item[1]}, phones))   
+    Repository.addContact(firstName, lastName, surName, contactPhones)
+
 # Поиск контактов в телефонном справочнике
 def __findContacts(cmd):
     strHelp = 'Введите '
@@ -53,11 +102,13 @@ def __findContacts(cmd):
     text = input(strHelp)
 
     if cmd == __CMD_FIND_BY_FISRT_NAME:
-        Repository.findByFirstNameAndPrint(text)
+        contacts = Repository.findByFirstName(text)
     elif cmd == __CMD_FIND_BY_LAST_NAME:
-        Repository.findByLastNameAndPrint(text)
+        contacts = Repository.findByLastName(text)
     else:
-        Repository.findByNumberAndPrint(text)
+        contacts = Repository.findByNumber(text)
+
+    __printContacts(contacts)
 
 # Добавление нового контакта
 def __addContact():
@@ -71,11 +122,8 @@ def __addContact():
         title = input('Описание номера: ')
         if phone == '0' or title == '0':
             break
-        phones.append([title, phone])
-
-    # формируем список номеров
-    contactPhones = list(map(lambda item: {consts.KEY_TITLE: item[0], consts.KEY_NUMBER: item[1]}, phones))    
-    Repository.addContact(firstName, lastName, surName, contactPhones)
+        phones.append([title, phone]) 
+    addContact(firstName, lastName, surName, phones)
 
 # Поиск контакта для дальнейшего редактирования
 def __findContactForEdit():
@@ -115,3 +163,17 @@ def __deleteContact():
                 print("Некорректный идентификатор")
         except ValueError:
             print("Некорректный идентификатор")
+
+
+
+# Печать контакта в красивом виде
+def __printContacts(contacts):
+    print('Найденные контакты:')
+    for contact in contacts:
+        text = f"[{contact[consts.KEY_ID]}] {contact[consts.KEY_FIRST_NAME]} {contact[consts.KEY_LAST_NAME]} {contact[consts.KEY_SURNAME]}: "
+        phones = contact[consts.KEY_PHONES]
+        for ind in range(len(phones)):
+            if ind > 0:
+                text += ', '
+            text += f"{phones[ind][consts.KEY_TITLE]} {phones[ind][consts.KEY_NUMBER]}"
+        print(text)
