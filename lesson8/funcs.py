@@ -44,7 +44,6 @@ def procCommand(cmd):
 # Получить все контакты
 def getAllContacts():
     return Repository.getAllContacts()
-    return True
 
 # Преобразовать контакты к списку ФИО контактов
 def contactsToContactsFIO(contacts):
